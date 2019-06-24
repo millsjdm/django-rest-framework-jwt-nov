@@ -2,14 +2,19 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from datetime import datetime
+from django.contrib.auth import get_user_model
+from rest_framework import viewsets
+from rest_framework_json_api.django_filters import DjangoFilterBackend
 
 from .settings import api_settings
 from .serializers import (
     JSONWebTokenSerializer, RefreshJSONWebTokenSerializer,
-    VerifyJSONWebTokenSerializer
+    VerifyJSONWebTokenSerializer, UserSerializer
 )
+from .filtersets import UserFilterset
 
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
+User = get_user_model()
 
 
 class JSONWebTokenAPIView(APIView):
@@ -102,3 +107,13 @@ class RefreshJSONWebToken(JSONWebTokenAPIView):
 obtain_jwt_token = ObtainJSONWebToken.as_view()
 refresh_jwt_token = RefreshJSONWebToken.as_view()
 verify_jwt_token = VerifyJSONWebToken.as_view()
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.order_by('id')
+    filterset_class = UserFilterset
+    serializer_class = UserSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+    resource_name = "user"
+

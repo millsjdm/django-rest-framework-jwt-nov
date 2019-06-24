@@ -10,6 +10,7 @@ from .compat import Serializer
 
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.compat import get_username_field, PasswordField
+from rest_framework_json_api import serializers
 
 
 User = get_user_model()
@@ -169,3 +170,15 @@ class RefreshJSONWebTokenSerializer(VerificationBaseSerializer):
             'token': jwt_encode_handler(new_payload),
             'user': user
         }
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'url',
+            'username',
+            'is_active',
+            'is_staff',
+        ]

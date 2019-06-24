@@ -10,11 +10,12 @@ from rest_framework.authentication import (
 
 from rest_framework_jwt.settings import api_settings
 
-from django.apps import apps
-
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class BaseJSONWebTokenAuthentication(BaseAuthentication):
     """
@@ -51,33 +52,11 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         """
         User = get_user_model()
         username = jwt_get_username_from_payload(payload)
-        print(payload)
         if not username:
             msg = _('Invalid payload.')
             raise exceptions.AuthenticationFailed(msg)
 
-        try:
-            user = User.objects.get_by_natural_key(username)
-        except User.DoesNotExist:
-            user = User.objects.create_user(
-                username,
-            )
-            email = payload.get('email')
-            if email:
-                Person = apps.get_model('bhs.person')
-                try:
-                    person, created = Person.objects.get_or_create(
-                        email=payload['email'],
-                    )
-                except IntegrityError:
-                    msg = _('Duplicate email.')
-                    raise exceptions.AuthenticationFailed(msg)
-                if created:
-                    person.first_name = payload['given_name']
-                    person.last_name = payload['family_name']
-                    person.save()
-                user.person = person
-                user.save()
+        user, _ = User.objects.update_or_create_user_from_payload(username, payload)
 
         if not user.is_active:
             msg = _('User account is disabled.')

@@ -72,4 +72,4 @@ class UserAdmin(BaseUserAdmin):
         'modified',
     ]
 
-# admin.site.unregister(AuthGroup)
+admin.site.unregister(AuthGroup)

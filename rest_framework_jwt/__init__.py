@@ -8,3 +8,4 @@ __copyright__ = 'Copyright 2014-2017 Blimp LLC'
 
 # Version synonym
 VERSION = __version__
+default_app_config = 'rest_framework_jwt.apps.RestFrameworkJWTConfig'

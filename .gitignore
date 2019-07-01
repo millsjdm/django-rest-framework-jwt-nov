@@ -19,3 +19,5 @@ local/
 !.coveragerc
 !.gitignore
 !.travis.yml
+Pipfile
+Pipfile.lock

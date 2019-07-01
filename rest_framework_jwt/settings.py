@@ -3,8 +3,20 @@ import datetime
 from django.conf import settings
 from rest_framework.settings import APISettings
 
+import requests
+from cryptography.x509 import load_pem_x509_certificate
+from cryptography.hazmat.backends import default_backend
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
+
+jwks = requests.get(
+    "https://{0}/.well-known/jwks.json".format(settings.AUTH0_DOMAIN)
+).json()
+cert = "-----BEGIN CERTIFICATE-----\n{0}\n-----END CERTIFICATE-----".format(
+    jwks['keys'][0]['x5c'][0],
+)
+certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
+jwt_public_key = certificate.public_key()
 
 DEFAULTS = {
     'JWT_ENCODE_HANDLER':
@@ -23,7 +35,7 @@ DEFAULTS = {
     None,
 
     'JWT_PUBLIC_KEY':
-    None,
+    jwt_public_key,
 
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
     'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
@@ -32,8 +44,9 @@ DEFAULTS = {
     'rest_framework_jwt.utils.jwt_response_payload_handler',
 
     'JWT_SECRET_KEY': settings.SECRET_KEY,
+    'JWT_DOMAIN': settings.AUTH0_DOMAIN,
     'JWT_GET_USER_SECRET_KEY': None,
-    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALGORITHM': 'RS256',
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
@@ -44,7 +57,7 @@ DEFAULTS = {
     'JWT_ALLOW_REFRESH': False,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_AUTH_COOKIE': None,
 }
 
@@ -57,6 +70,7 @@ IMPORT_STRINGS = (
     'JWT_PAYLOAD_GET_USERNAME_HANDLER',
     'JWT_RESPONSE_PAYLOAD_HANDLER',
     'JWT_GET_USER_SECRET_KEY',
+    # 'JWT_PUBLIC_KEY',
 )
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)

@@ -1,4 +1,3 @@
-
 # Standard Library
 import uuid
 
@@ -18,7 +17,6 @@ class UserCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        pk = uuid.uuid4()
         user.set_unusable_password()
         if commit:
             user.save()

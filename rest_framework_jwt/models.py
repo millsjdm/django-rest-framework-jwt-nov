@@ -1,6 +1,4 @@
-
 # Standard Library
-import logging
 import uuid
 
 # Django
@@ -10,12 +8,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 # First-Party
-from .fields import LowerEmailField
-from .fields import ImageUploadPath
 from .managers import UserManager
-
-
-log = logging.getLogger(__name__)
 
 
 class User(AbstractBaseUser):
@@ -55,7 +48,7 @@ class User(AbstractBaseUser):
         editable=True,
     )
 
-    email = LowerEmailField(
+    email = models.EmailField(
         help_text="""
             The contact email of the resource.""",
         blank=True,
@@ -67,7 +60,6 @@ class User(AbstractBaseUser):
     )
 
     image = models.ImageField(
-        upload_to=ImageUploadPath(),
         max_length=255,
         null=True,
         blank=True,

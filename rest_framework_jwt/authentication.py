@@ -1,5 +1,4 @@
 import jwt
-
 from django.contrib.auth import get_user_model
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
@@ -13,7 +12,6 @@ from rest_framework_jwt.settings import api_settings
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 

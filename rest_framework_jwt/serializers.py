@@ -1,7 +1,6 @@
-import jwt
-
 from calendar import timegm
 from datetime import datetime, timedelta
+import jwt
 
 from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext as _

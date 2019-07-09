@@ -38,7 +38,8 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
             msg = _('Error decoding signature.')
             raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            raise exceptions.AuthenticationFailed()
+            msg = _('Invalid token.')
+            raise exceptions.AuthenticationFailed(msg)
 
         user = self.authenticate_credentials(payload)
 

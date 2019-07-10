@@ -186,6 +186,7 @@ class UserSerializer(serializers.ModelSerializer):
             'image',
             'app_metadata',
             'user_metadata',
+            'roles',
             'is_active',
             'is_staff',
         ]

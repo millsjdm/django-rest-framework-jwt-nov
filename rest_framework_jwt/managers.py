@@ -29,8 +29,9 @@ class UserManager(BaseUserManager):
         family_name = payload.get('family_name', "Unknown")
         email_verified = payload.get('email_verified', False)
         image = payload.get('picture', "")
-        app_metadata = payload.get('app_metadata', {})
-        user_metadata = payload.get('user_metadata', {})
+        app_metadata = payload.get('https://login.barberscore.com/app_metadata', {})
+        user_metadata = payload.get('https://login.barberscore.com/user_metadata', {})
+        roles = payload.get('https://login.barberscore.com/roles', [])
 
         # Transform
 
@@ -44,6 +45,7 @@ class UserManager(BaseUserManager):
             'image': image,
             'app_metadata': app_metadata,
             'user_metadata': user_metadata,
+            'roles': roles,
         }
         user, created = self.update_or_create(
             username=username,

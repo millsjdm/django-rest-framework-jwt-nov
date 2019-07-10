@@ -41,6 +41,7 @@ class UserAdmin(BaseUserAdmin):
                 'image',
                 'app_metadata',
                 'user_metadata',
+                'roles',
                 'created',
                 'modified',
             )
@@ -68,6 +69,7 @@ class UserAdmin(BaseUserAdmin):
         'image',
         'app_metadata',
         'user_metadata',
+        'roles',
         'created',
         'modified',
     ]

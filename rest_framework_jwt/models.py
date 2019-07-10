@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField
 
 # First-Party
 from .managers import UserManager
@@ -71,6 +72,15 @@ class User(AbstractBaseUser):
     )
 
     user_metadata = JSONField(
+        null=True,
+        blank=True,
+    )
+
+    roles = ArrayField(
+        base_field=models.CharField(
+            blank=True,
+            max_length=255,
+        ),
         null=True,
         blank=True,
     )

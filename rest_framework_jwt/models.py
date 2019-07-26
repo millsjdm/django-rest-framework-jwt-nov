@@ -35,14 +35,14 @@ class User(AbstractBaseUser):
         editable=True,
     )
 
-    given_name = models.CharField(
+    first_name = models.CharField(
         max_length=100,
         blank=True,
         default='',
         editable=True,
     )
 
-    family_name = models.CharField(
+    last_name = models.CharField(
         max_length=100,
         blank=True,
         default='',

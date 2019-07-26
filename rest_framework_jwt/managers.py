@@ -25,8 +25,8 @@ class UserManager(BaseUserManager):
         # Extract
         email = payload.get('email', None)
         name = payload.get('name', "Unknown")
-        given_name = payload.get('given_name', "Unknown")
-        family_name = payload.get('family_name', "Unknown")
+        first_name = payload.get('given_name', "Unknown")
+        last_name = payload.get('family_name', "Unknown")
         email_verified = payload.get('email_verified', False)
         image = payload.get('picture', "")
         app_metadata = payload.get('https://login.barberscore.com/app_metadata', {})
@@ -39,8 +39,8 @@ class UserManager(BaseUserManager):
         defaults = {
             'email': email,
             'name': name,
-            'given_name': given_name,
-            'family_name': family_name,
+            'first_name': first_name,
+            'last_name': last_name,
             'email_verified': email_verified,
             'image': image,
             'app_metadata': app_metadata,

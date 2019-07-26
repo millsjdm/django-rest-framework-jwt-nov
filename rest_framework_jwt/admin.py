@@ -34,8 +34,8 @@ class UserAdmin(BaseUserAdmin):
                 'id',
                 'username',
                 'name',
-                'given_name',
-                'family_name',
+                'first_name',
+                'last_name',
                 'email',
                 'email_verified',
                 'image',
@@ -50,20 +50,20 @@ class UserAdmin(BaseUserAdmin):
     search_fields = [
         'username',
         'name',
-        'given_name',
-        'family_name',
+        'first_name',
+        'last_name',
     ]
     ordering = (
-        'family_name',
-        'given_name',
+        'last_name',
+        'first_name',
     )
     filter_horizontal = ()
     readonly_fields = [
         'id',
         'username',
         'name',
-        'given_name',
-        'family_name',
+        'first_name',
+        'last_name',
         'email',
         'email_verified',
         'image',

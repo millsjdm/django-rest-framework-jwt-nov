@@ -1,7 +1,20 @@
 # Django
 from django.contrib.auth.models import BaseUserManager
 
+from .utils import get_or_create_account_from_email
+
 class UserManager(BaseUserManager):
+    def get_or_create_user_from_email(self, email):
+        try:
+            user = self.get(email=email)
+            created = False
+        except self.model.DoesNotExist:
+            created = True
+            account, _ = get_or_create_account_from_email(email)
+            user = self.create_user(account['user_id'], email=email)
+        return user, created
+
+
     def create_user(self, username, **kwargs):
         user = self.model(
             username=username,

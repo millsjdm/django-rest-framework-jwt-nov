@@ -28,6 +28,11 @@ class User(AbstractBaseUser):
         editable=True,
     )
 
+    email = models.EmailField(
+        unique=True,
+        editable=False,
+    )
+
     name = models.CharField(
         max_length=100,
         blank=True,
@@ -52,8 +57,6 @@ class User(AbstractBaseUser):
     email = models.EmailField(
         help_text="""
             The contact email of the resource.""",
-        blank=True,
-        null=True,
     )
 
     email_verified = models.BooleanField(
@@ -115,7 +118,7 @@ class User(AbstractBaseUser):
         resource_name = "user"
 
     def __str__(self):
-        return str(self.name)
+        return str(self.email)
 
     def clean(self):
         pass

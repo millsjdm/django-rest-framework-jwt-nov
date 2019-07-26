@@ -1,8 +1,11 @@
+import json
 import jwt
 import uuid
 import warnings
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
+from django.utils.crypto import get_random_string
 
 from calendar import timegm
 from datetime import datetime
@@ -10,6 +13,57 @@ from datetime import datetime
 from rest_framework_jwt.compat import get_username
 from rest_framework_jwt.compat import get_username_field
 from rest_framework_jwt.settings import api_settings
+
+from auth0.v3.authentication import GetToken
+from auth0.v3.exceptions import Auth0Error
+from auth0.v3.management import Auth0
+
+def get_auth0():
+    """
+    Retrieve instantiated auth0 client.
+
+    This also uses the cache so we're not re-instantiating for every update.
+    """
+    auth0_api_access_token = cache.get('auth0_api_access_token')
+    if not auth0_api_access_token:
+        client = GetToken(api_settings.AUTH0_DOMAIN)
+        response = client.client_credentials(
+            api_settings.AUTH0_CLIENT_ID,
+            api_settings.AUTH0_CLIENT_SECRET,
+            api_settings.AUTH0_AUDIENCE,
+        )
+        cache.set(
+            'auth0_api_access_token',
+            response['access_token'],
+            timeout=response['expires_in'],
+        )
+        auth0_api_access_token = response['access_token']
+    auth0 = Auth0(
+        api_settings.AUTH0_DOMAIN,
+        auth0_api_access_token,
+    )
+    return auth0
+
+
+def get_or_create_account_from_email(email):
+    # TODO perhaps move this in the DRF JWT?
+    auth0 = get_auth0()
+
+    results = auth0.users_by_email.search_users_by_email(email)
+    if results:
+        account = results[0]
+        created = False
+    else:
+        password = get_random_string()
+        payload = {
+            'connection': 'Default',
+            'email': email,
+            'email_verified': True,
+            'password': password,
+        }
+        account = auth0.users.create(payload)
+        created = True
+    return account, created
 
 
 def jwt_get_secret_key(payload=None):

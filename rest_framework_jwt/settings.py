@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.core.cache import cache
 from rest_framework.settings import APISettings
 
 import requests
@@ -9,11 +10,19 @@ from cryptography.hazmat.backends import default_backend
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 
-jwks = requests.get(
-    "https://{0}/.well-known/jwks.json".format(settings.AUTH0_DOMAIN)
-).json()
+auth0_jwks = cache.get('auth0_jwks')
+if not auth0_jwks:
+    jwks = requests.get(
+        "https://{0}/.well-known/jwks.json".format(USER_SETTINGS.get('AUTH0_DOMAIN'))
+    ).json()
+    cache.set(
+        'auth0_jwks',
+        jwks,
+    )
+    auth0_jwks = jwks
+
 cert = "-----BEGIN CERTIFICATE-----\n{0}\n-----END CERTIFICATE-----".format(
-    jwks['keys'][0]['x5c'][0],
+    auth0_jwks['keys'][0]['x5c'][0],
 )
 certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
 jwt_public_key = certificate.public_key()
@@ -50,7 +59,7 @@ DEFAULTS = {
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
-    'JWT_AUDIENCE': settings.AUTH0_CLIENT_ID,
+    'JWT_AUDIENCE': USER_SETTINGS.get('AUTH0_CLIENT_ID'),
     'JWT_ISSUER': None,
 
     'JWT_ALLOW_REFRESH': False,
@@ -58,6 +67,10 @@ DEFAULTS = {
 
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_AUTH_COOKIE': None,
+    'AUTH0_CLIENT_ID': None,
+    'AUTH0_CLIENT_SECRET': None,
+    'AUTH0_DOMAIN': None,
+    'AUTH0_AUDIENCE': None,
 }
 
 # List of settings that may be in string import notation.

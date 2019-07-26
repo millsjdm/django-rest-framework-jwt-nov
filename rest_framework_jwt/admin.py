@@ -12,9 +12,9 @@ from .forms import UserChangeForm
 from .models import User
 
 
-admin.site.site_header = 'Barberscore Admin Backend'
+admin.site.site_header = 'Admin Backend'
 
-@admin.register(User)
+# @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     def has_add_permission(self, request):
         return False

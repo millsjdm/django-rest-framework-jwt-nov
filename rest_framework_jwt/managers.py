@@ -1,32 +1,24 @@
 # Django
 from django.contrib.auth.models import BaseUserManager
 
-from .utils import get_or_create_account_from_email
+from .utils import get_auth0
+from django.utils.crypto import get_random_string
 
 class UserManager(BaseUserManager):
-    def get_or_create_user_from_email(self, email):
-        try:
-            user = self.get(email=email)
-            created = False
-        except self.model.DoesNotExist:
-            created = True
-            account, _ = get_or_create_account_from_email(email)
-            user = self.create_user(account['user_id'], email=email)
-        return user, created
-
-
-    def create_user(self, username, **kwargs):
+    def create_user(self, username, email, **kwargs):
         user = self.model(
             username=username,
+            email=email,
             **kwargs
         )
         user.set_unusable_password()
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password, **kwargs):
+    def create_superuser(self, username, email, password, **kwargs):
         user = self.model(
             username=username,
+            email=email,
             is_staff=True,
             **kwargs
         )
@@ -34,37 +26,30 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def update_or_create_user_from_payload(self, username, payload):
-        # Extract
-        email = payload.get('email', None)
-        name = payload.get('name', "Unknown")
-        first_name = payload.get('given_name', "Unknown")
-        last_name = payload.get('family_name', "Unknown")
-        email_verified = payload.get('email_verified', False)
-        image = payload.get('picture', "")
-        app_metadata = payload.get('https://login.barberscore.com/app_metadata', {})
-        user_metadata = payload.get('https://login.barberscore.com/user_metadata', {})
-        roles = payload.get('https://login.barberscore.com/roles', [])
+    def get_or_create(self, *args, **kwargs):
+        """
+        Customized Auth0 get_or_create
 
-        # Transform
+        This gets or creates an Auth0 account prior to calling super for the User
+        """
+        email = kwargs.get('email', None)
+        role = kwargs.get('role', None)
 
-        # Load
-        defaults = {
-            'email': email,
-            'name': name,
-            'first_name': first_name,
-            'last_name': last_name,
-            'email_verified': email_verified,
-            'image': image,
-            'app_metadata': app_metadata,
-            'user_metadata': user_metadata,
-            'roles': roles,
-        }
-        user, created = self.update_or_create(
-            username=username,
-            defaults=defaults,
-        )
-        if created:
-            user.set_unusable_password()
-            user.save(using=self._db)
-        return user, created
+        auth0 = get_auth0()
+        results = auth0.users_by_email.search_users_by_email(email)
+        if results:
+            account = results[0]
+        else:
+            password = get_random_string()
+            payload = {
+                'connection': 'Default',
+                'email': kwargs['email'],
+                'email_verified': True,
+                'password': password,
+            }
+            account = auth0.users.create(payload)
+        username = account['user_id']
+        if role:
+            role_id = auth0.roles.list(name_filter=officer.get_office_display())['roles'][0]['id']
+            auth0.users.add_roles(username, [role_id])
+        return super().get_or_create(username=username, *args, **kwargs)

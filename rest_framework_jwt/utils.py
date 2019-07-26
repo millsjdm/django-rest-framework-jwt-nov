@@ -44,28 +44,6 @@ def get_auth0():
     )
     return auth0
 
-
-def get_or_create_account_from_email(email):
-    # TODO perhaps move this in the DRF JWT?
-    auth0 = get_auth0()
-
-    results = auth0.users_by_email.search_users_by_email(email)
-    if results:
-        account = results[0]
-        created = False
-    else:
-        password = get_random_string()
-        payload = {
-            'connection': 'Default',
-            'email': email,
-            'email_verified': True,
-            'password': password,
-        }
-        account = auth0.users.create(payload)
-        created = True
-    return account, created
-
-
 def jwt_get_secret_key(payload=None):
     """
     For enhanced security you may want to use a secret key based on user.

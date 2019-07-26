@@ -51,11 +51,17 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         """
         User = get_user_model()
         username = jwt_get_username_from_payload(payload)
+
         if not username:
-            msg = _('Invalid payload.')
+            msg = _('Payload requires username.')
             raise exceptions.AuthenticationFailed(msg)
 
-        user, _ = User.objects.update_or_create_user_from_payload(username, payload)
+        email = payload.get('email', None)
+        if not email:
+            msg = _('Payload requires email.')
+            raise exceptions.AuthenticationFailed(msg)
+
+        user, _ = User.objects.update_or_create(username, email, payload)
 
         if not user.is_active:
             msg = _('User account is disabled.')

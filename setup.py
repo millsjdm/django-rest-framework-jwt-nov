@@ -34,6 +34,8 @@ install_requires = [
     'pillow',
     'cryptography',
     'requests',
+    'json',
+    'auth0-python',
 ]
 
 

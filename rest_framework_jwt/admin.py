@@ -6,7 +6,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from django.contrib.auth.models import Group as AuthGroup
 
-
 # Local
 from .forms import AccountUserCreationForm
 
@@ -78,6 +77,7 @@ class UserAdmin(BaseUserAdmin):
         'roles',
     ]
 
+
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display = [
@@ -105,5 +105,6 @@ class RoleAdmin(admin.ModelAdmin):
     )
     readonly_fields = [
     ]
+
 
 admin.site.unregister(AuthGroup)

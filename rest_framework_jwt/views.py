@@ -9,12 +9,18 @@ from rest_framework_json_api.django_filters import DjangoFilterBackend
 from .settings import api_settings
 from .serializers import (
     JSONWebTokenSerializer, RefreshJSONWebTokenSerializer,
-    VerifyJSONWebTokenSerializer, UserSerializer
+    VerifyJSONWebTokenSerializer
 )
 from .filtersets import UserFilterset
+from .filtersets import RoleFilterset
 
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 User = get_user_model()
+
+from .models import Role
+
+from .serializers import UserSerializer
+from .serializers import RoleSerializer
 
 
 class JSONWebTokenAPIView(APIView):
@@ -116,4 +122,14 @@ class UserViewSet(viewsets.ModelViewSet):
         DjangoFilterBackend,
     ]
     resource_name = "user"
+
+
+class RoleViewSet(viewsets.ModelViewSet):
+    queryset = Role.objects.prefetch_related('roles').order_by('id')
+    filterset_class = RoleFilterset
+    serializer_class = RoleSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+    resource_name = "role"
 

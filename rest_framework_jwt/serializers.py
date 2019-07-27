@@ -5,14 +5,16 @@ import jwt
 from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext as _
 from rest_framework import serializers
+from rest_framework_json_api import serializers as json_api_serializers
 from .compat import Serializer
 
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.compat import get_username_field, PasswordField
-from rest_framework_json_api import serializers
 
 
 User = get_user_model()
+from .models import Role
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
@@ -170,7 +172,8 @@ class RefreshJSONWebTokenSerializer(VerificationBaseSerializer):
             'user': user
         }
 
-class UserSerializer(serializers.ModelSerializer):
+
+class UserSerializer(json_api_serializers.ModelSerializer):
 
     class Meta:
         model = User
@@ -189,4 +192,17 @@ class UserSerializer(serializers.ModelSerializer):
             'roles',
             'is_active',
             'is_staff',
+        ]
+
+
+class RoleSerializer(json_api_serializers.ModelSerializer):
+
+    class Meta:
+        model = Role
+        fields = [
+            'id',
+            'url',
+            'rolename',
+            'name',
+            'description',
         ]

@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group as AuthGroup
 
 
 # Local
-from .forms import UserChangeForm
+from .forms import AccountUserCreationForm
 
 from .models import User
 from .models import Role
@@ -19,45 +19,36 @@ admin.site.site_header = 'Admin Backend'
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    def has_add_permission(self, request):
-        return False
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        extra_context['show_save_and_continue'] = False
-        extra_context['show_save'] = False
-        return super().changeform_view(request, object_id, extra_context=extra_context)
-
-    form = UserChangeForm
+    add_form = AccountUserCreationForm
     list_display = [
         'name',
         'email',
-        # 'roles',
     ]
     list_filter = [
         'is_active',
         'is_staff',
         'roles',
     ]
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('name', 'email', 'first_name', 'last_name', ),
+        }),
+    )
+
     fieldsets = (
         (None, {
             'fields': (
                 'id',
                 'username',
                 'name',
+                'email',
                 'first_name',
                 'last_name',
-                'email',
-                'email_verified',
-                'image',
+                # 'image',
+                'roles',
                 'app_metadata',
                 'user_metadata',
-                'roles',
                 'created',
                 'modified',
             )
@@ -65,6 +56,7 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = [
         'username',
+        'email',
         'name',
         'first_name',
         'last_name',
@@ -77,43 +69,22 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = [
         'id',
         'username',
-        'name',
-        'first_name',
-        'last_name',
-        'email',
-        'email_verified',
-        'image',
         'app_metadata',
         'user_metadata',
         'created',
         'modified',
     ]
+    autocomplete_fields = [
+        'roles',
+    ]
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return False
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        extra_context['show_save_and_continue'] = False
-        extra_context['show_save'] = False
-        return super().changeform_view(request, object_id, extra_context=extra_context)
-
-    form = UserChangeForm
     list_display = [
         'name',
         'description',
     ]
     list_filter = [
-        # 'is_active',
-        # 'is_staff',
-        # RolesFilter,
     ]
     fieldsets = (
         (None, {

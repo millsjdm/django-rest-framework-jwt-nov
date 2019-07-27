@@ -61,7 +61,11 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
             msg = _('Payload requires email.')
             raise exceptions.AuthenticationFailed(msg)
 
-        user, _ = User.objects.update_or_create(username, email, payload)
+        try:
+            user = User.objects.get_by_natural_key(username)
+        except User.DoesNotExist:
+            msg = _('User does not exist.')
+            raise exceptions.AuthenticationFailed(msg)
 
         if not user.is_active:
             msg = _('User account is disabled.')

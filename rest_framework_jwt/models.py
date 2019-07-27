@@ -25,18 +25,16 @@ class User(AbstractBaseUser):
     username = models.CharField(
         max_length=100,
         unique=True,
-        editable=True,
+        editable=False,
     )
 
     email = models.EmailField(
         unique=True,
-        editable=False,
+        editable=True,
     )
 
     name = models.CharField(
         max_length=100,
-        blank=True,
-        default='',
         editable=True,
     )
 
@@ -52,11 +50,6 @@ class User(AbstractBaseUser):
         blank=True,
         default='',
         editable=True,
-    )
-
-    email = models.EmailField(
-        help_text="""
-            The contact email of the resource.""",
     )
 
     email_verified = models.BooleanField(

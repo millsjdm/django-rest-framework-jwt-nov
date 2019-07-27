@@ -14,36 +14,6 @@ from rest_framework_jwt.compat import get_username
 from rest_framework_jwt.compat import get_username_field
 from rest_framework_jwt.settings import api_settings
 
-from auth0.v3.authentication import GetToken
-from auth0.v3.exceptions import Auth0Error
-from auth0.v3.management import Auth0
-
-def get_auth0():
-    """
-    Retrieve instantiated auth0 client.
-
-    This also uses the cache so we're not re-instantiating for every update.
-    """
-    auth0_api_access_token = cache.get('auth0_api_access_token')
-    if not auth0_api_access_token:
-        client = GetToken(api_settings.AUTH0_DOMAIN)
-        response = client.client_credentials(
-            api_settings.AUTH0_CLIENT_ID,
-            api_settings.AUTH0_CLIENT_SECRET,
-            api_settings.AUTH0_AUDIENCE,
-        )
-        cache.set(
-            'auth0_api_access_token',
-            response['access_token'],
-            timeout=response['expires_in'],
-        )
-        auth0_api_access_token = response['access_token']
-    auth0 = Auth0(
-        api_settings.AUTH0_DOMAIN,
-        auth0_api_access_token,
-    )
-    return auth0
-
 def jwt_get_secret_key(payload=None):
     """
     For enhanced security you may want to use a secret key based on user.

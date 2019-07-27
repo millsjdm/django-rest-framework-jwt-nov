@@ -79,15 +79,6 @@ class User(AbstractBaseUser):
         blank=True,
     )
 
-    roles = ArrayField(
-        base_field=models.CharField(
-            blank=True,
-            max_length=255,
-        ),
-        null=True,
-        blank=True,
-    )
-
     is_active = models.BooleanField(
         default=True,
     )
@@ -104,6 +95,12 @@ class User(AbstractBaseUser):
     modified = models.DateTimeField(
         auto_now=True,
         editable=False,
+    )
+
+    roles = models.ManyToManyField(
+        'rest_framework_jwt.role',
+        blank=True,
+        related_name="roles",
     )
 
     objects = UserManager()
@@ -128,3 +125,31 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_staff
+
+
+class Role(models.Model):
+    """
+    Inheirts from core Group
+    """
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    rolename = models.CharField(
+        max_length=100,
+        unique=True,
+        editable=True,
+    )
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+        editable=True,
+    )
+    description = models.TextField(
+        blank=True,
+        default='',
+    )
+
+    def __str__(self):
+        return self.name

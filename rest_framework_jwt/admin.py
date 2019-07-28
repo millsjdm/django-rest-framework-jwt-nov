@@ -5,6 +5,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from django.contrib.auth.models import Group as AuthGroup
+from django.contrib.postgres.fields import JSONField
+from prettyjson import PrettyJSONWidget
 
 # Local
 from .forms import AccountUserCreationForm
@@ -69,14 +71,15 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = [
         'id',
         'username',
-        # 'app_metadata',
-        # 'user_metadata',
         'created',
         'modified',
     ]
     autocomplete_fields = [
         'roles',
     ]
+    formfield_overrides = {
+        JSONField: {'widget': PrettyJSONWidget }
+    }
 
 
 @admin.register(Role)

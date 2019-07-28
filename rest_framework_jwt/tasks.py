@@ -78,7 +78,7 @@ def update_account_from_user(user):
     )
     # Re-write payload to conform to Auth0
     payload['picture'] = user.image_url
-    payload['app_metadata']['image_name'] = user.image_name
+    payload['app_metadata'] = {'image_name': user.image_name}
     payload['given_name'] = payload.pop('first_name')
     payload['family_name'] = payload.pop('last_name')
     return auth0.users.update(user.username, payload)

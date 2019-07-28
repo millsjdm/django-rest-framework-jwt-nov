@@ -10,7 +10,7 @@ from django.contrib.postgres.fields import ArrayField
 
 # First-Party
 from .managers import UserManager
-
+from .fields import UploadPath
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = settings.USERNAME_FIELD
@@ -57,9 +57,10 @@ class User(AbstractBaseUser):
     )
 
     image = models.ImageField(
+        upload_to=UploadPath('image'),
         max_length=255,
-        null=True,
         blank=True,
+        default="",
     )
 
     app_metadata = JSONField(
@@ -102,6 +103,16 @@ class User(AbstractBaseUser):
     def is_superuser(self):
         return bool(self.is_staff)
 
+    @property
+    def image_name(self):
+        return self.image.name
+
+    @property
+    def image_url(self):
+        try:
+            return self.image.url
+        except ValueError:
+            return ''
 
     # User Internals
     class JSONAPIMeta:

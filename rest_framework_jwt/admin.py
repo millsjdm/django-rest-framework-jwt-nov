@@ -24,7 +24,6 @@ class UserAdmin(BaseUserAdmin):
     list_display = [
         'name',
         'email',
-        'app_metadata',
     ]
     list_filter = [
         'is_active',
@@ -47,10 +46,10 @@ class UserAdmin(BaseUserAdmin):
                 'email',
                 'first_name',
                 'last_name',
-                # 'image',
-                'roles',
-                'app_metadata',
                 'user_metadata',
+                'roles',
+                'image',
+                # 'app_metadata',
                 'created',
                 'modified',
             )
@@ -78,7 +77,7 @@ class UserAdmin(BaseUserAdmin):
         'roles',
     ]
     formfield_overrides = {
-        JSONField: {'widget': PrettyJSONWidget }
+        JSONField: {'widget': PrettyJSONWidget(attrs={'initial': 'parsed'})}
     }
 
 

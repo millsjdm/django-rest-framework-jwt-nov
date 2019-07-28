@@ -186,14 +186,19 @@ class UserSerializer(json_api_serializers.ModelSerializer):
             'last_name',
             'email',
             'email_verified',
-            'image',
             'app_metadata',
             'user_metadata',
+            'image_name',
+            'image_url',
             'roles',
             'is_active',
             'is_staff',
         ]
 
+        read_only_fields = [
+            'image_url',
+            'image_name',
+        ]
 
 class RoleSerializer(json_api_serializers.ModelSerializer):
 

@@ -22,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = [
         'name',
         'email',
+        'app_metadata',
     ]
     list_filter = [
         'is_active',
@@ -68,8 +69,8 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = [
         'id',
         'username',
-        'app_metadata',
-        'user_metadata',
+        # 'app_metadata',
+        # 'user_metadata',
         'created',
         'modified',
     ]

@@ -72,8 +72,8 @@ def update_account_from_user(user):
             'name',
             'first_name',
             'last_name',
-            # 'app_metadata',
-            # 'user_metadata',
+            'app_metadata',
+            'user_metadata',
         ]
     )
     # Re-write payload to conform to Auth0

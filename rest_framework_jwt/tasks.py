@@ -24,7 +24,9 @@ def get_auth0():
     """
     auth0_api_access_token = cache.get('auth0_api_access_token')
     if not auth0_api_access_token:
-        client = GetToken(api_settings.AUTH0_DOMAIN)
+        client = GetToken(
+            api_settings.AUTH0_DOMAIN,
+        )
         response = client.client_credentials(
             api_settings.AUTH0_CLIENT_ID,
             api_settings.AUTH0_CLIENT_SECRET,

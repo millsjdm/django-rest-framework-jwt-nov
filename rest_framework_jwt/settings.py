@@ -13,7 +13,9 @@ USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 auth0_jwks = cache.get('auth0_jwks')
 if not auth0_jwks:
     jwks = requests.get(
-        "https://{0}/.well-known/jwks.json".format(USER_SETTINGS.get('AUTH0_DOMAIN'))
+        "https://{0}/.well-known/jwks.json".format(
+            USER_SETTINGS.get('AUTH0_DOMAIN')
+        )
     ).json()
     cache.set(
         'auth0_jwks',
@@ -59,7 +61,7 @@ DEFAULTS = {
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
-    'JWT_AUDIENCE': USER_SETTINGS.get('AUTH0_CLIENT_ID'),
+    'JWT_AUDIENCE': None,
     'JWT_ISSUER': None,
 
     'JWT_ALLOW_REFRESH': False,

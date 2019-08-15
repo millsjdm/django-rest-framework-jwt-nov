@@ -73,6 +73,7 @@ DEFAULTS = {
     'AUTH0_CLIENT_SECRET': None,
     'AUTH0_DOMAIN': None,
     'AUTH0_AUDIENCE': None,
+    'AUTH0_CONNECTION': 'Default',
 }
 
 # List of settings that may be in string import notation.

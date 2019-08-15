@@ -54,7 +54,7 @@ def get_or_create_account_from_email(email):
     else:
         password = get_random_string()
         payload = {
-            'connection': 'Default',
+            'connection': api_settings.AUTH0_CONNECTION,
             'email': email,
             'email_verified': True,
             'password': password,

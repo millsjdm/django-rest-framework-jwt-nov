@@ -105,3 +105,8 @@ def remove_account_roles_from_user_pk_set(user, role, pk_set):
     roles = [str(i.rolename) for i in roles_raw]
     return auth0.users.remove_roles(user.username, roles)
 
+@job('low')
+def delete_account_from_username(username):
+    auth0 = get_auth0()
+    auth0.users.delete(username)
+    return "Deleted: {0}".format(username)

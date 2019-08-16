@@ -17,7 +17,9 @@ from .tasks import remove_account_roles_from_user_pk_set
 
 
 @receiver(pre_save, sender=User)
-def user_pre_save(sender, instance, **kwargs):
+def user_pre_save(sender, instance, raw=False, **kwargs):
+    if raw:
+        return
     if instance.is_staff:
         return
     account, created = get_or_create_account_from_email(instance.email)

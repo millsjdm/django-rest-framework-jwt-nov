@@ -22,7 +22,7 @@ def user_pre_save(sender, instance, raw=False, **kwargs):
         return
     if instance.is_staff:
         return
-    account, created = get_or_create_account_from_email(instance.email)
+    account, _ = get_or_create_account_from_email(instance.email)
     instance.username = account['user_id']
     return update_account_from_user(instance)
 
@@ -32,7 +32,7 @@ def user_pre_delete(sender, instance, **kwargs):
         return
     return delete_account_from_user(instance)
 
-# @receiver(m2m_changed, sender=User.roles.through)
+@receiver(m2m_changed, sender=User.roles.through)
 def user_roles_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
     if instance.is_staff:
         return

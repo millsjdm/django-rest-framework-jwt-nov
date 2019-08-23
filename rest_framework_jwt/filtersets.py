@@ -12,11 +12,12 @@ class UserFilterset(FilterSet):
             'id': [
                 'exact',
             ],
-            'username': [
-                'exact',
-            ],
             'name': [
                 'contains',
+                'exact',
+            ],
+            'email': [
+                'exact',
             ],
         }
 
@@ -26,9 +27,6 @@ class RoleFilterset(FilterSet):
         model = Role
         fields = {
             'id': [
-                'exact',
-            ],
-            'rolename': [
                 'exact',
             ],
             'name': [

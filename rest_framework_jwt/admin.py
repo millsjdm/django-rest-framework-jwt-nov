@@ -41,7 +41,6 @@ class UserAdmin(BaseUserAdmin):
         (None, {
             'fields': (
                 'id',
-                'username',
                 'name',
                 'email',
                 'first_name',
@@ -56,7 +55,6 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     search_fields = [
-        'username',
         'email',
         'name',
         'first_name',
@@ -69,7 +67,6 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
     readonly_fields = [
         'id',
-        'username',
         'created',
         'modified',
     ]
@@ -93,13 +90,11 @@ class RoleAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 'name',
-                'rolename',
                 'description',
             )
         }),
     )
     search_fields = [
-        'rolename',
         'name',
     ]
     ordering = (

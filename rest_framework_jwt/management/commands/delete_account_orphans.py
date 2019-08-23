@@ -28,9 +28,9 @@ class Command(BaseCommand):
                 accounts.append(item['Id'])
         self.stdout.write("Getting Users...")
         users = User.objects.filter(
-            username__startswith='auth0|',
+            id__startswith='auth0|',
         ).values_list(
-            'username',
+            'id',
             flat=True,
         )
         users_set = set(users)

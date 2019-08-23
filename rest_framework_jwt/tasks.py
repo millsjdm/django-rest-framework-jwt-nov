@@ -83,30 +83,38 @@ def update_account_from_user(user):
         payload['picture'] = user.image_url
     payload['given_name'] = payload.pop('first_name')
     payload['family_name'] = payload.pop('last_name')
-    return auth0.users.update(user.username, payload)
+    return auth0.users.update(user.id, payload)
 
 
 @job('low')
 def delete_account_from_user(user):
     auth0 = get_auth0()
-    return auth0.users.delete(user.username)
+    return auth0.users.delete(user.id)
 
 @job('low')
 def add_account_roles_from_user_pk_set(user, role, pk_set):
     auth0 = get_auth0()
-    roles_raw = role.objects.filter(id__in=pk_set)
-    roles = [str(i.rolename) for i in roles_raw]
-    return auth0.users.add_roles(user.username, roles)
+    roles = role.objects.filter(
+        id__in=pk_set,
+    ).values_list(
+        'id',
+        flat=True,
+    )
+    return auth0.users.add_roles(user.id, roles)
 
 @job('low')
 def remove_account_roles_from_user_pk_set(user, role, pk_set):
     auth0 = get_auth0()
-    roles_raw = role.objects.filter(id__in=pk_set)
-    roles = [str(i.rolename) for i in roles_raw]
-    return auth0.users.remove_roles(user.username, roles)
+    roles = role.objects.filter(
+        id__in=pk_set,
+    ).values_list(
+        'id',
+        flat=True,
+    )
+    return auth0.users.remove_roles(user.id, roles)
 
 @job('low')
-def delete_account_from_username(username):
+def delete_account_from_id(id):
     auth0 = get_auth0()
-    auth0.users.delete(username)
-    return "Deleted: {0}".format(username)
+    auth0.users.delete(id)
+    return "Deleted: {0}".format(id)

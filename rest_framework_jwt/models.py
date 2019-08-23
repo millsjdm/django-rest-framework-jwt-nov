@@ -16,15 +16,9 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = settings.USERNAME_FIELD
     REQUIRED_FIELDS = settings.REQUIRED_FIELDS
 
-    id = models.UUIDField(
+    id = models.CharField(
         primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
-
-    username = models.CharField(
         max_length=100,
-        unique=True,
         editable=False,
     )
 
@@ -135,15 +129,10 @@ class Role(models.Model):
     """
     Inheirts from core Group
     """
-    id = models.UUIDField(
+    id = models.CharField(
         primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
-    rolename = models.CharField(
         max_length=100,
-        unique=True,
-        editable=True,
+        editable=False,
     )
     name = models.CharField(
         max_length=150,

@@ -6,9 +6,9 @@ from django.utils.crypto import get_random_string
 # from .tasks import get_username_from_email
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, **kwargs):
+    def create_user(self, id, email, **kwargs):
         user = self.model(
-            username=username,
+            id=id,
             email=email,
             **kwargs
         )
@@ -16,9 +16,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password, **kwargs):
+    def create_superuser(self, id, email, password, **kwargs):
         user = self.model(
-            username=username,
+            id=id,
             email=email,
             is_staff=True,
             **kwargs

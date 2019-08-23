@@ -52,15 +52,6 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         User = get_user_model()
         username = jwt_get_username_from_payload(payload)
 
-        if not username:
-            msg = _('Payload requires username.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        email = payload.get('email', None)
-        if not email:
-            msg = _('Payload requires email.')
-            raise exceptions.AuthenticationFailed(msg)
-
         try:
             user = User.objects.get_by_natural_key(username)
         except User.DoesNotExist:

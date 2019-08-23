@@ -180,7 +180,6 @@ class UserSerializer(json_api_serializers.ModelSerializer):
         fields = [
             'id',
             'url',
-            'username',
             'name',
             'first_name',
             'last_name',
@@ -207,7 +206,6 @@ class RoleSerializer(json_api_serializers.ModelSerializer):
         fields = [
             'id',
             'url',
-            'rolename',
             'name',
             'description',
         ]

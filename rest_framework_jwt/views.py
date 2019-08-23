@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework_json_api.django_filters import DjangoFilterBackend
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 from .settings import api_settings
 from .serializers import (
@@ -123,7 +123,7 @@ class UserViewSet(viewsets.ModelViewSet):
         DjangoFilterBackend,
     ]
     permission_classes = [
-        AllowAny,
+        IsAuthenticated,
     ]
     resource_name = "user"
 
@@ -136,7 +136,7 @@ class RoleViewSet(viewsets.ModelViewSet):
         DjangoFilterBackend,
     ]
     permission_classes = [
-        AllowAny,
+        IsAuthenticated,
     ]
     resource_name = "role"
 

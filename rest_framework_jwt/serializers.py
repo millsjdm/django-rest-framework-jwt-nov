@@ -96,15 +96,15 @@ class VerificationBaseSerializer(Serializer):
         return payload
 
     def _check_user(self, payload):
-        username = jwt_get_username_from_payload(payload)
+        id = jwt_get_username_from_payload(payload)
 
-        if not username:
+        if not id:
             msg = _('Invalid payload.')
             raise serializers.ValidationError(msg)
 
         # Make sure user exists
         try:
-            user = User.objects.get_by_natural_key(username)
+            user = User.objects.get(id=id)
         except User.DoesNotExist:
             msg = _("User doesn't exist.")
             raise serializers.ValidationError(msg)

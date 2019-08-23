@@ -50,10 +50,10 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         Returns an active user that matches the payload's user id and email.
         """
         User = get_user_model()
-        username = jwt_get_username_from_payload(payload)
+        id = jwt_get_username_from_payload(payload)
 
         try:
-            user = User.objects.get_by_natural_key(username)
+            user = User.objects.get(id=id)
         except User.DoesNotExist:
             msg = _('User does not exist.')
             raise exceptions.AuthenticationFailed(msg)

@@ -5,6 +5,7 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework_json_api.django_filters import DjangoFilterBackend
+from rest_framework.permissions import AllowAny
 
 from .settings import api_settings
 from .serializers import (
@@ -121,6 +122,9 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [
         DjangoFilterBackend,
     ]
+    permission_classes = [
+        AllowAny,
+    ]
     resource_name = "user"
 
 
@@ -130,6 +134,9 @@ class RoleViewSet(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
     filter_backends = [
         DjangoFilterBackend,
+    ]
+    permission_classes = [
+        AllowAny,
     ]
     resource_name = "role"
 

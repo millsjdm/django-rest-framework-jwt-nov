@@ -22,6 +22,7 @@ admin.site.site_header = 'Admin Backend'
 class UserAdmin(BaseUserAdmin):
     add_form = AccountUserCreationForm
     list_display = [
+        'id',
         'name',
         'email',
     ]
@@ -81,6 +82,7 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'name',
         'description',
     ]
@@ -89,6 +91,7 @@ class RoleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
+                'id',
                 'name',
                 'description',
             )
@@ -102,6 +105,7 @@ class RoleAdmin(admin.ModelAdmin):
         'name',
     )
     readonly_fields = [
+        'id',
     ]
 
 

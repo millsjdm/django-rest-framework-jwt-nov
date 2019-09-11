@@ -29,7 +29,7 @@ def user_pre_delete(sender, instance, **kwargs):
 @receiver(m2m_changed, sender=User.roles.through)
 def user_roles_changed(sender, instance, action, reverse, model, pk_set, **kwargs):
     if action == "pre_add":
-        return add_account_roles_from_user_pk_set(instance, model, pk_set)
+        return add_account_roles_from_user_pk_set(instance, pk_set)
     if action == "pre_remove":
-        return remove_account_roles_from_user_pk_set(instance, model, pk_set)
+        return remove_account_roles_from_user_pk_set(instance, pk_set)
     return

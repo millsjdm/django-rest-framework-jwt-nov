@@ -94,12 +94,14 @@ def delete_account_from_user(user):
 @job('low')
 def add_account_roles_from_user_pk_set(user, pk_set):
     auth0 = get_auth0()
-    return auth0.users.add_roles(user.id, pk_set)
+    pk_list = list(pk_set)
+    return auth0.users.add_roles(user.id, pk_list)
 
 @job('low')
 def remove_account_roles_from_user_pk_set(user, pk_set):
     auth0 = get_auth0()
-    return auth0.users.remove_roles(user.id, pk_set)
+    pk_list = list(pk_set)
+    return auth0.users.remove_roles(user.id, pk_list)
 
 @job('low')
 def delete_account_from_id(pk):

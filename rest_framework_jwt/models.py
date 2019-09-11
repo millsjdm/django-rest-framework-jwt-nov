@@ -11,6 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 # First-Party
 from .managers import UserManager
 from .fields import UploadPath
+from .validators import validate_punctuation
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = settings.USERNAME_FIELD
@@ -30,6 +31,9 @@ class User(AbstractBaseUser):
     name = models.CharField(
         max_length=100,
         editable=True,
+        validators=[
+            validate_punctuation,
+        ],
     )
 
     first_name = models.CharField(
@@ -37,6 +41,9 @@ class User(AbstractBaseUser):
         blank=True,
         default='',
         editable=True,
+        validators=[
+            validate_punctuation,
+        ],
     )
 
     last_name = models.CharField(
@@ -44,6 +51,9 @@ class User(AbstractBaseUser):
         blank=True,
         default='',
         editable=True,
+        validators=[
+            validate_punctuation,
+        ],
     )
 
     email_verified = models.BooleanField(

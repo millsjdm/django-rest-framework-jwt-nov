@@ -56,8 +56,6 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         name = payload.get('name', "")
         first_name = payload.get('given_name', "")
         last_name = payload.get('family_name', "")
-
-        print(payload)
         try:
             user = User.objects.get(id=id)
             user.name = name

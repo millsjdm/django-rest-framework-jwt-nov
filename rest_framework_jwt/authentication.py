@@ -13,9 +13,7 @@ jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 jwt_get_username_from_payload = api_settings.JWT_PAYLOAD_GET_USERNAME_HANDLER
 
 
-from .models import User
-from .models import Role
-
+User = get_user_model()
 
 class BaseJSONWebTokenAuthentication(BaseAuthentication):
     """
@@ -51,38 +49,18 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         """
         Returns an active user that matches the payload's user id and email.
         """
+        User = get_user_model()
         id = jwt_get_username_from_payload(payload)
-        names = payload.get('https://www.barberscore.com/roles', None)
-        name = payload.get('name', "")
-        first_name = payload.get('given_name', "")
-        last_name = payload.get('family_name', "")
         try:
             user = User.objects.get(id=id)
-            user.name = name
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
         except User.DoesNotExist:
-            email = payload.get('email', None)
-            if not email:
-                msg = _('User does not exist.')
-                raise exceptions.AuthenticationFailed(msg)
+            msg = _('User does not exist.')
+            raise exceptions.AuthenticationFailed(msg)
 
-            user = User.objects.create_user(
-                id,
-                email,
-                name=name,
-                first_name=first_name,
-                last_name=last_name,
-            )
         if not user.is_active:
             msg = _('User account is disabled.')
             raise exceptions.AuthenticationFailed(msg)
 
-        roles = Role.objects.filter(
-            name__in=names,
-        )
-        user.roles.set(roles)
         return user
 
 
